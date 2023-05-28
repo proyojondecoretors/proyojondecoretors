@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+<style>
+    .form-container{
+        margin-left: 20px;
+    }
+    .form-title{
+        font-size: 30px;
+        font-weight: bold;
+        color: rgb(69, 81, 241);
+
+    }
+    input[type=text]{
+        padding: 5px;
+        display: block;
+        margin: 5px;
+        width: 300px;
+    }
+    .sub-btn{
+        padding: 5px;
+        margin-top: 10px;
+        margin-left: 5px;
+    }
+</style>
+
+{% endblock title %}
+
+
+{% block body %}
+<div class="form-container">
+    <div class="form-title">
+        Add new item
+    </div>
+    <form action="" method="post" onsubmit="return confirm('Are you sure?')">
+        {% csrf_token %}
+        <input type="text" placeholder="Product Name" name="product_name"  required>
+        <input type="text" placeholder="Product quantity" name="total_amount" required>
+        <input type="text" placeholder="On order" name="on_order" required>
+        <input type="submit" value="Submit" class="sub-btn btn btn-success">
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+
+
+
+
+{% endblock scripts %}

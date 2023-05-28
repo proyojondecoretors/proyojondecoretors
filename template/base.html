@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proyojon Decorator & Enterprise</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="icon" href="https://scontent.fdac96-1.fna.fbcdn.net/v/t39.30808-6/304773657_493310262799667_496919713049606245_n.jpg?_nc_cat=111&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeET3uDFttW3Tc_pMT6GO0zsbMtjidltwvtsy2OJ2W3C-58szKuJ-VbYb6paeyVFx5lc7VnOqBEnIbm_7avlQ8to&_nc_ohc=MAr6v1wUxLYAX-25kEC&_nc_zt=23&_nc_ht=scontent.fdac96-1.fna&oh=00_AfCY9WWVOkkE9mabYP1KFlDJc1KyWPxpbJuvD1sZBJG2RQ&oe=64759EA5" type="image/x-icon">
+    {% load static %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .top-section {
+            width: 100%;
+            height: 100px;
+        }
+
+        .top-section-left {
+            font-size: 40px;
+            font-family: cursive;
+            margin-left: 20px;
+            padding-top: 20px;
+            color: #01ffd9;
+        }
+
+        .base-main-container {
+            width: 100%;
+            height: 89vh;
+            background-color: rgb(253, 253, 253);
+            display: flex;
+        }
+
+        .left-nav {
+            width: 22%;
+            background-color: rgb(212, 211, 211);
+            height: 89vh;
+            padding-top: 20px;
+
+        }
+
+        .dash-logo img {
+            height: 120px;
+            width: auto;
+            margin-left: 25%;
+
+        }
+
+        .body-container {
+            height: 89vh;
+            overflow: scroll;
+            width: 78%;
+        }
+
+        .nav-item-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-item {
+            width: 100%;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 5px;
+            padding-left: 30px;
+            color: black;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            border-bottom: 1px solid silver;
+        }
+
+        .nav-item:hover {
+            background-color: #46b4e7;
+
+        }
+
+        .active {
+            background-color: #11a9f0;
+            pointer-events: none;
+        }
+
+        @media screen and (max-width:1000px) {
+            .left-nav {
+                position: absolute;
+                left: -100%;
+            }
+
+            .top-section-left {
+                font-size: 25px;
+            }
+
+            .body-container {
+                width: 100%;
+            }
+
+            .order-body {
+                width: 90% !important;
+            }
+        }
+
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            background-color: #11a9f0;
+        }
+
+        @media(max-width:768px) {
+            .hamburger {
+                position: absolute;
+                right: 10px;
+                top: 40px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                cursor: pointer;
+                display: block;
+            }
+
+            .hamburger.active1 .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active1 .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active1 .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-item-box {
+                position: fixed;
+                left: -100%;
+                top: 100px;
+                gap: 0;
+                flex-direction: column;
+                background-color: rgb(243, 243, 243);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                z-index: 1;
+            }
+
+            .nav-item-box.active1 {
+                left: 0;
+                height: 500px;
+            }
+        }
+    </style>
+
+    {% block title %}
+
+    {% endblock title %}
+</head>
+
+<body>
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert">
+        {{ message }}
+
+    </div>
+
+    {% endfor %}
+    <div class="top-section">
+        <div class="top-section-left">
+            Proyojon Decorator & Enterprise
+        </div>
+        <div class="top-section-right">
+            <div class="hamburger">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+        </div>
+    </div>
+    <div class="base-main-container">
+        <div class="left-nav">
+            <div class="dash-logo">
+                <img src="https://img.freepik.com/free-icon/pie-chart_318-372376.jpg" alt="">
+            </div>
+            <div class="nav-item-box">
+                <a href="dashboard" id="dashboard" class="nav-item">Dashboard</a>
+                <a href="manage" id="manage" class="nav-item">Manage Products</a>
+                <a href="add" id="add" class="nav-item">Add New Products</a>
+                <a href="activeorders" id="activeorders" class="nav-item">Active Orders </a>
+                <a href="order" id="order" class="nav-item">Create supply</a>
+            </div>
+        </div>
+
+        <div class="body-container">
+            {% block body %}
+
+
+            {% endblock body %}
+        </div>
+    </div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+
+    function autocomplete(inp, arr) {
+
+        var currentFocus;
+
+        inp.addEventListener("input", function (e) {
+            var a, b, i, val = this.value;
+            closeAllLists();
+
+            if (!val) { return false; }
+            currentFocus = -1;
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            this.parentNode.appendChild(a);
+
+
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    b = document.createElement("DIV");
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    b.innerHTML += "<input  type='hidden' value='" + arr[i] + "'>";
+
+                    var availbe_amounts = JSON.parse(localStorage.availble);
+                    var index = arr.indexOf(arr[i])
+                    var amount = availbe_amounts[index]
+
+                    b.innerHTML += "<b>(" + amount + ")</b>"
+                    b.addEventListener("click", function (e) {
+                        inp.value = this.getElementsByTagName("input")[0].value;
+
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+
+            if (x) x = x.getElementsByTagName("div");
+
+            if (e.keyCode == 40) {
+
+                currentFocus++;
+                addActive(x);
+
+            } else if (e.keyCode == 38) {
+                currentFocus--;
+                addActive(x);
+
+            } else if (e.keyCode == 13) {
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            if (!x) return false;
+            removeActive(x);
+
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+        function closeAllLists(elmnt) {
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+    }
+</script>
+<script>
+    var my_location = location.href
+    my = (my_location.split("/"))
+    last_url = my[my.length - 1]
+    document.getElementById(`${last_url}`).classList.add('active')
+
+</script>
+<script>
+    const hamburger = document.querySelector('.hamburger')
+    const navMenu = document.querySelector('.nav-item-box')
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle("active1")
+        navMenu.classList.toggle("active1")
+    })
+    document.querySelectorAll(".nav-item").forEach(n => n.addEventListener('click', () => {
+        hamburger.classList.remove('active1')
+        navMenu.classList.remove('active1')
+    }))
+</script>
+
+{% block scripts %}
+
+{% endblock scripts %}
+
+</html>

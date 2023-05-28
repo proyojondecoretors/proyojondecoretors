@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <style>
+        .manage-main-container{
+            margin-left: 20px;
+        }
+        .form-title{
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+        input{
+            padding: 5px;
+            margin: 5px 0;
+            display: block;
+        }
+        input[type=text]{
+            width: 300px;
+        }
+    </style>
+{% endblock title %}
+    
+{% block body %}
+<div class="manage-main-container">
+    <div class="form-title">
+        Add or Remove items
+    </div>
+    <form action="" method="post" onsubmit="return confirm('Are you sure you want to submit this form?');">
+        {% csrf_token %}
+        <div class="input-field">
+            <input type="text" id="myInput" name="item_name" placeholder="Item name" required>
+        </div>
+        <input type="text" name="amount" placeholder="Amount" required>
+        <select name="select" id="">
+            <option id="o1" name="Add" value="Add">Add</option>
+            <option id="o2" name="Remove" value="Remove">Remove</option>
+        </select>
+        <br>
+        <input type="submit" value="Submit" class="btn btn-success">
+        
+    </form>
+</div>
+    
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+    var products = JSON.parse(localStorage.data)
+    autocomplete(document.getElementById("myInput"), products);
+</script>
+
+<script>
+    if (typeof (Storage) !== "undefined") {
+        var items_amount = JSON.parse('{{availble|safe}}')
+        var data = JSON.parse('{{ items|safe }}');
+        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("availble", JSON.stringify(items_amount));
+    } else {
+        console.log("localStorage is not supported.");
+    }
+    
+</script>
+{% endblock scripts %}
+    

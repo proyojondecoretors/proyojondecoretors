@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<style>
+    * {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    .order-main-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    input[type=text] {
+        outline: none;
+    }
+
+    .order-top {
+        padding: 10px 20px;
+        width: 100%;
+
+    }
+
+    #myInput {
+        width: 500px;
+        padding: 5px;
+    }
+
+    #count {
+        padding: 5px;
+        width: 60px;
+    }
+
+    #addToList {
+        padding: 5px 25px;
+    }
+
+    .order-body {
+        width: 80%;
+        position: relative;
+        min-height: 400PX;
+        border: 1px solid silver;
+        margin: 20px;
+        padding: 15px 0;
+        
+    }
+    .order-list{
+        width: 80%;
+        margin: 0 5%;
+        
+    }
+    .remove-btn{
+        padding: 2px 5px;
+    }
+    
+    .order-list tbody td:nth-child(1){
+        width: 10%;
+    }
+    .order-list tbody td:nth-child(2){
+        width: 50%;
+    }
+    .order-list tbody td:nth-child(3){
+        width: 10%;
+    }
+    .order-list tbody td:nth-child(4){
+        width: 10%;
+    }
+    #id_data{
+        width: 0;
+        height: 0;
+    }
+    #sub-btn{
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        padding: 3px 5px;
+        background-color: #0dc01c;
+        color: aliceblue;
+        border-radius: 4px;
+        border: none;
+    }
+    #sub-btn:hover{
+        background-color: #327c38;
+    }
+    .order-name-section{
+        width: 80%;
+        margin-left: 20px;
+    }
+    .order-name-section input{
+        padding: 5px;
+        width: 48%;
+        margin-bottom: 5px;
+    }
+    @media screen and (max-width:1000px) {
+        #myInput{
+            width: 80%;
+        }
+    }
+</style>
+{% endblock title %}
+
+{% block body %}
+<div class="order-main-container">
+    <form action="order" method="post" onsubmit="return confirm('Confirm order!')">
+        {% csrf_token %}
+    <div class="order-name-section">
+        <input type="text" id="name" placeholder="Customer Name" name="name" required>
+        <input type="text" id="address" placeholder="Address" name="address" required>
+        <input type="text" id="contact" placeholder="Contact number" name="contact" required>
+    </div>
+    <div class="order-top">
+        <input type="text" id="myInput">
+        <input type="text" id="count">
+        <input type="button" value="Add" id="addToList" onclick="add()">
+
+    </div>
+    <div class="order-body">
+        <table class="order-list" >
+            <tr>
+                <th>#</th>
+                <th>Item Name</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+            <tbody id="tbd">
+                
+            </tbody>
+
+        </table>
+        
+            <input type="text" id="id_data" name="add_data">
+            <input type="submit" name="" id="sub-btn" class="btn btn-success">
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+
+<script>
+
+    var products = JSON.parse(localStorage.data)
+    autocomplete(document.getElementById("myInput"), products);
+</script>
+
+<script>
+    if (typeof (Storage) !== "undefined") {
+        var items_amount = JSON.parse('{{availble|safe}}')
+        var data = JSON.parse('{{ items|safe }}');
+        localStorage.setItem("data", JSON.stringify(data));
+        localStorage.setItem("availble", JSON.stringify(items_amount));
+    } else {
+        console.log("localStorage is not supported.");
+    }
+</script>
+<script>
+    re_load()
+    function add() {
+        let itemName = document.getElementById('myInput').value;
+        let count = document.getElementById('count').value;
+        if (itemName != '' && count != '' && localStorage.data.includes(itemName)) {
+            let l = []
+            if (localStorage.orderList == undefined) {
+                
+                l.push([itemName, count])
+                localStorage.setItem('orderList', JSON.stringify(l))
+            } else {
+                l = JSON.parse(localStorage.orderList)
+                l.push([itemName, count])
+                localStorage.setItem('orderList', JSON.stringify(l))
+            }
+            // location.reload()
+            re_load()
+        }
+        
+    }
+
+    function re_load(){
+        document.getElementById('myInput').value = ""
+        document.getElementById('count').value = ""
+        if (localStorage.orderList != undefined) {
+            let mainList = JSON.parse(localStorage.orderList);
+            let table = document.getElementById('tbd');
+            string = "";
+            mainList.forEach((element, index) => {
+                string += `
+                <tr>       
+                    <td>${index+1}.</td>
+                    <td>${element[0]}</td>
+                    <td>${element[1]}</td>
+                    <td><input type="button" class="remove-btn" value="X" onclick="deleted(${index})"
+                </tr>
+                `
+                
+            });
+            table.innerHTML=string
+        
+        }
+    }
+    // window.addEventListener('load', () => {
+        
+    // })
+
+    function deleted(n){
+        mainList = JSON.parse(localStorage.orderList)
+        mainList.splice(n, 1)
+        localStorage.setItem('orderList', JSON.stringify(mainList))
+        re_load()
+    }
+    document.getElementById('addToList').addEventListener('click', ()=>{
+        let data = localStorage.orderList
+        document.getElementById('id_data').value = data;
+        
+    })
+    document.getElementById('sub-btn').addEventListener('click',()=>{
+        localStorage.clear()
+    })
+    window.addEventListener('load', ()=>{
+        localStorage.removeItem('orderList')
+    })
+</script>
+{% endblock scripts %}

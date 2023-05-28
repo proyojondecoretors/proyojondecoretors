@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block body %}
+
+        <table class="table">
+  <thead>
+    <tr>
+
+      <th scope="col">Item Name</th>
+      <th scope="col">Total Amount</th>
+      <th scope="col">Available</th>
+      <th scope="col">On Order</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+  {% for i in products %}
+    <tr>
+
+      <td class="fw-bold ml-2 ">{{i.item_name}}</td>
+      <td>{{i.total_amount}}</td>
+      <td>{{i.available}}</td>
+      <td>{{i.on_order}}</td>
+    </tr>
+    <tr>
+    {% endfor %}
+  </tbody>
+</table>
+    
+       
+{% endblock %}
+    
